@@ -1,15 +1,20 @@
-<div class="flex flex-col flex-1 items-stretch">
-  <div class="flex flex-col gap-2 items-center py-2 flex-1">
-    <div class="flex flex-col w-10/12">
-      <div class="flex flex-col rounded p-2 gap-2 flex-grow w-full">
+<div class="flex flex-col flex-1 items-stretch max-h-full overflow-auto">
+  <div class="flex flex-col items-center py-2 flex-1 max-h-full overflow-auto">
+    <div class="flex flex-col w-10/12 gap-4 max-h-full overflow-auto">
+      <div
+        class="flex flex-col rounded p-2 gap-2 flex-grow w-full max-h-full overflow-auto"
+      >
         <div
-          *ngFor="let msg of messages"
+          *ngFor="let msg of messages; let i = index"
           class="flex flex-col gap-0.5 text-white"
           [ngClass]="msg.id === socketId ? 'items-end' : 'items-start'"
         >
-          <div *ngIf="msg.id !== socketId">From: {{ msg.id }}</div>
+          <div *ngIf="msg.id !== socketId && msg.id !== messages[i - 1]?.id">
+            From: {{ msg.id }}
+          </div>
           <div
-            class="bg-gray-500 font-normal text-sm py-1 px-2 rounded-md w-fit"
+            class="font-normal text-sm py-1 px-2 rounded-md w-fit"
+            [ngClass]="msg.id === socketId ? 'bg-green-500' : 'bg-gray-600'"
           >
             {{ msg.message }}
           </div>

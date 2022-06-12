@@ -24,23 +24,30 @@ export class RoomComponent implements OnInit {
   public messages: MessageReceivedEvent[] = [];
   async ngOnInit() {
     this.route.params.subscribe(({ roomNumber }) => {
-      this.socket?.disconnect();
-      this.socket = io(`http://localhost:3000/chat-${roomNumber}`);
-
-      this.socket.on('connect', () => {
-        this.socketId = this.socket.id; // x8WIv7-mJelg7on_ALbx
-      });
-
-      this.socket.on('disconnect', () => {
-        console.log(this.socket.id); // undefined
-      });
-
-      this.socket.on('message', (event: MessageReceivedEvent) =>
-        this.messages.push(event)
-      );
-
-      this.socket.onAny((data) => console.log(data));
+      this._resetMessages();
+      this._connectToChatRoom(roomNumber);
     });
+  }
+
+  private _connectToChatRoom(roomNumber: string) {
+    this.socket?.disconnect();
+    this.socket = io(`http://localhost:3000/chat-${roomNumber}`);
+
+    this.socket.on('connect', () => {
+      this.socketId = this.socket.id; // x8WIv7-mJelg7on_ALbx
+    });
+
+    this.socket.on('disconnect', () => {
+      console.log(this.socket.id); // undefined
+    });
+
+    this.socket.on('message', (event: MessageReceivedEvent) =>
+      this.messages.push(event)
+    );
+  }
+
+  _resetMessages() {
+    this.messages = [];
   }
 
   sendMessage() {
