@@ -1,0 +1,9 @@
+<div class="flex flex-row flex-grow justify-between w-full gap-4">
+  <div
+    *ngFor="let roomNumber of rooms"
+    class="bg-gray-300 text-gray-900 rounded-lg font-medium text-xl cursor-pointer p-4 text-center flex flex-grow justify-center"
+    [routerLink]="['room', roomNumber]"
+  >
+    Room {{ roomNumber }}
+  </div>
+</div>

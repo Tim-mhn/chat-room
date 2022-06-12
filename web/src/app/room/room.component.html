@@ -1,0 +1,36 @@
+<div class="flex flex-col flex-1 items-stretch">
+  <div class="flex flex-col gap-2 items-center py-2 flex-1">
+    <div class="flex flex-col w-10/12">
+      <div class="flex flex-col rounded p-2 gap-2 flex-grow w-full">
+        <div
+          *ngFor="let msg of messages"
+          class="flex flex-col gap-0.5 text-white"
+          [ngClass]="msg.id === socketId ? 'items-end' : 'items-start'"
+        >
+          <div *ngIf="msg.id !== socketId">From: {{ msg.id }}</div>
+          <div
+            class="bg-gray-500 font-normal text-sm py-1 px-2 rounded-md w-fit"
+          >
+            {{ msg.message }}
+          </div>
+        </div>
+      </div>
+      <form
+        class="flex flex-row gap-2 px-4"
+        [formGroup]="form"
+        (ngSubmit)="sendMessage()"
+      >
+        <input
+          class="border border-gray-100 rounded p-1 flex flex-grow"
+          formControlName="message"
+        />
+        <button
+          class="bg-gray-200 p-1 text-gray-800 rounded-md font-medium text-sm"
+          type="submit"
+        >
+          Send
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
