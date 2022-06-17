@@ -1,24 +1,30 @@
 <div class="flex flex-col flex-1 items-stretch max-h-full overflow-auto">
   <div class="flex flex-col items-center py-2 flex-1 max-h-full overflow-auto">
-    <div class="flex flex-col w-10/12 gap-4 max-h-full overflow-auto">
+    <div class="flex flex-col w-full gap-4 max-h-full overflow-auto">
       <div
         class="flex flex-col rounded p-2 gap-2 flex-grow w-full max-h-full overflow-auto"
       >
-        <div
-          *ngFor="let msg of messages; let i = index"
-          class="flex flex-col gap-0.5 text-white"
-          [ngClass]="msg.id === socketId ? 'items-end' : 'items-start'"
-        >
-          <div *ngIf="msg.id !== socketId && msg.id !== messages[i - 1]?.id">
-            From: {{ msg.id }}
-          </div>
-          <div
-            class="font-normal text-sm py-1 px-2 rounded-md w-fit"
-            [ngClass]="msg.id === socketId ? 'bg-green-500' : 'bg-gray-600'"
-          >
-            {{ msg.message }}
-          </div>
-        </div>
+        <ng-container *ngFor="let event of roomEvents; let i = index">
+          <ng-container [ngSwitch]="event.type">
+            <ng-container *ngSwitchCase="'message'">
+              <ng-container
+                *ngTemplateOutlet="
+                  messageTempl;
+                  context: { $implicit: event.data, index: i }
+                "
+              >
+              </ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'enterleave'">
+              <ng-container
+                *ngTemplateOutlet="
+                  enterLeaveEvent;
+                  context: { $implicit: event }
+                "
+              ></ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
       </div>
       <form
         class="flex flex-row gap-2 px-4"
@@ -39,3 +45,65 @@
     </div>
   </div>
 </div>
+
+<ng-template #enterLeaveEvent let-event>
+  <div class="flex justify-center text-gray-300 text-3xs">
+    {{ event.data.id }}
+    {{ event.data?.enter ? "entered" : "exited" }} the room
+  </div>
+</ng-template>
+<ng-template #messageTempl let-msgEvent let-i="index">
+  <div class="flex flex-row text-white items-end gap-2">
+    <!-- message sender -->
+    <div class="flex flex-flex-1 justify-end" style="flex-basis: 10%">
+      <div
+        class="flex justify-center items-center rounded-full p-0.5 bg-blue-300 h-6 w-6 uppercase text-2xs"
+        *ngIf="
+          msgEvent.id !== socketId &&
+          (!roomEvents[i + 1] ||
+            roomEvents[i + 1]?.type !== 'message' ||
+            msgEvent.id !== roomEvents[i + 1]?.data?.id)
+        "
+      >
+        {{ msgEvent.id | slice: 0 - 2 }}
+      </div>
+    </div>
+
+    <!-- message -->
+    <div
+      style="display: flex; flex: 8 8 80%"
+      [ngClass]="msgEvent.id === socketId ? 'justify-end' : 'justify-start'"
+    >
+      <div
+        class="font-normal text-sm py-1 px-2 rounded-md w-fit"
+        [ngClass]="msgEvent.id === socketId ? 'bg-green-500' : 'bg-gray-600'"
+      >
+        {{ msgEvent.message }}
+      </div>
+    </div>
+
+    <!-- message reads -->
+    <div class="flex flex-1" style="flex-basis: 10%"></div>
+  </div>
+  <!-- <div
+    class="flex flex-col gap-0.5 text-white"
+    [ngClass]="msgEvent.id === socketId ? 'items-end' : 'items-start'"
+  >
+    <div
+      class="font-normal text-sm py-1 px-2 rounded-md w-fit"
+      [ngClass]="msgEvent.id === socketId ? 'bg-green-500' : 'bg-gray-600'"
+    >
+      {{ msgEvent.message }}
+    </div>
+    <div
+      *ngIf="
+        msgEvent.id !== socketId &&
+        (!roomEvents[i + 1] ||
+          roomEvents[i + 1]?.type !== 'message' ||
+          msgEvent.id !== roomEvents[i + 1]?.data?.id)
+      "
+    >
+      From: {{ msgEvent.id }}
+    </div>
+  </div> -->
+</ng-template>

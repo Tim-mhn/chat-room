@@ -14,20 +14,23 @@ const chatNsp = io.of(/^\/chat-\d$/);
 
 chatNsp.on("connection", (socket: Socket) => {
   const nsp = socket.nsp;
-  //   const roomNumber = nsp.slice(-1);
+
   const roomNumber = nsp.name.slice(-1);
   const roomName = `room-${roomNumber}`;
-  console.log("connection !");
-  console.log(socket.id);
-  socket.join(roomName);
   const socketId = socket.id;
+  socket.join(roomName);
+
+  chatNsp.to(roomName).emit("enter", { id: socketId, date: new Date() });
   socket.on("message", (msg) => {
     console.log("received message ", msg);
-    chatNsp.to(roomName).emit("message", { id: socketId, message: msg });
+    chatNsp
+      .to(roomName)
+      .emit("message", { id: socketId, message: msg, date: new Date() });
   });
 
   socket.on("disconnect", () => {
     console.log(socketId, " disconnected");
+    chatNsp.to(roomName).emit("exit", { id: socketId, date: new Date() });
   });
 });
 
