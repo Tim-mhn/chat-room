@@ -1,0 +1,7 @@
+<div class="flex flex-row bg-gray-100 flex-grow justify-end">
+  <button *ngIf="!(isAuthenticated$ | async)" (click)="login()">Login</button>
+  <button *ngIf="isAuthenticated$ | async" (click)="logout()">Logout</button>
+
+  <button (click)="callAPI()">call API</button>
+  <button (click)="callPublicAPI()">call public API</button>
+</div>
