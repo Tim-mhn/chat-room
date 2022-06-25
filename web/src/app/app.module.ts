@@ -7,23 +7,19 @@ import { AppComponent } from './app.component';
 import { RoomComponent } from './room/room.component';
 import { RoomSelectionComponent } from './room-selection/room-selection.component';
 import { AuthModule } from '@auth0/auth0-angular';
-import { AuthComponent } from './auth/auth.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthProvider } from './interceptors/auth.interceptor';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HeaderModule } from './components/header/header.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    RoomComponent,
-    RoomSelectionComponent,
-    AuthComponent,
-  ],
+  declarations: [AppComponent, RoomComponent, RoomSelectionComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-
+    HeaderModule,
     AuthModule.forRoot({
       domain: 'dev-jajajfbc.us.auth0.com',
       clientId: 'Vsrw48jAFMbpXfIsLwAaHT8S6dlFVwOE',
@@ -32,6 +28,7 @@ import { AuthProvider } from './interceptors/auth.interceptor';
       appUri: 'http://localhost:4200',
       errorPath: '/error',
     }),
+    BrowserAnimationsModule,
   ],
   providers: [AuthProvider],
   bootstrap: [AppComponent],

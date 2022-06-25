@@ -6,21 +6,24 @@ import {
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { Injectable, Provider } from '@angular/core';
-import { AuthService, AuthState } from '@auth0/auth0-angular';
-import { map, Observable, switchMap } from 'rxjs';
+import { forkJoin, map, Observable, switchMap } from 'rxjs';
+import { AuthenticationService } from '../auth/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private _auth: AuthService) {}
+  constructor(private _auth: AuthenticationService) {}
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    return this._auth.getAccessTokenSilently().pipe(
-      switchMap((accessToken) => {
+    return forkJoin([this._auth.accessToken$, this._auth.idTokenClaims$]).pipe(
+      switchMap(([accessToken, idTokenClaims]) => {
         const authHeader = this._buildAuthorizationHeader(accessToken);
+        const idToken = idTokenClaims?.raw as string;
         const requestWithAuthHeaders = req.clone({
-          headers: req.headers.set('Authorization', authHeader),
+          headers: req.headers
+            .set('Authorization', authHeader)
+            .set('idToken', idToken),
         });
         return next.handle(requestWithAuthHeaders);
       })

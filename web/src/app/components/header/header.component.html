@@ -1,0 +1,17 @@
+<div
+  class="flex flex-grow w-full justify-end border-b border-gray-200 bg-gray-200 px-16 py-2"
+>
+  <ng-container
+    *ngTemplateOutlet="(isLoggedIn$ | async) ? logoutButton : loginButton"
+  ></ng-container>
+
+  {{ profileService.profile$ | async | json }}
+</div>
+
+<ng-template #loginButton>
+  <button mat-button color="primary" (click)="login()">Login</button>
+</ng-template>
+
+<ng-template #logoutButton>
+  <button mat-button color="warn" (click)="logout()">Logout</button>
+</ng-template>

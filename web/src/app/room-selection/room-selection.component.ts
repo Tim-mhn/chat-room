@@ -4,6 +4,9 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-room-selection',
   templateUrl: './room-selection.component.html',
   styleUrls: ['./room-selection.component.scss'],
+  host: {
+    class: 'flex w-full flex-grow',
+  },
 })
 export class RoomSelectionComponent implements OnInit {
   constructor() {}

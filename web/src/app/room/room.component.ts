@@ -27,6 +27,9 @@ type IRoomEventInfo =
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.scss'],
+  host: {
+    class: 'flex flex-grow items-end',
+  },
 })
 export class RoomComponent implements OnInit {
   constructor(private fb: FormBuilder, private route: ActivatedRoute) {}
@@ -64,7 +67,9 @@ export class RoomComponent implements OnInit {
 
   private _connectToChatRoom(roomNumber: string) {
     this.socket?.disconnect();
-    this.socket = io(`http://localhost:3000/chat-${roomNumber}`);
+    this.socket = io(`http://localhost:3000/chat-${roomNumber}`, {
+      auth: {},
+    });
 
     this.socket.on('connect', () => {
       this.socketId = this.socket.id; // x8WIv7-mJelg7on_ALbx

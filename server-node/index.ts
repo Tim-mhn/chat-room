@@ -3,6 +3,8 @@ import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import { auth } from "express-oauth2-jwt-bearer";
 import * as cors from "cors";
+import jwt_decode from "jwt-decode";
+import { UserProfile } from "./models/profile";
 const app = express();
 const httpServer = createServer(app);
 app.use(
@@ -15,6 +17,10 @@ const io = new Server(httpServer, {
     origin: "*",
   },
 });
+
+function getUserProfileFromIdToken(idToken: string) {
+  return jwt_decode(idToken) as UserProfile;
+}
 
 // Authorization middleware. When used, the Access Token must
 // exist and be verified against the Auth0 JSON Web Key Set.
@@ -65,3 +71,9 @@ app.get("/api/private", checkJwt, (req, res) => {
     message: "hello from private endpoint",
   });
 });
+
+// app.get("/me", checkJwt, (req, res) => {
+//   const idToken = req.params["idToken"];
+//   const userProfile = getUserProfileFromIdToken(idToken);
+//   res.json(userProfile);
+// });
