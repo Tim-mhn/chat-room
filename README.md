@@ -2,7 +2,11 @@
 
 ## To do 
 
-- "User x entered / exited the room" okk
+- "User x entered / exited the room" ✓
+- OAuth Login / sign up ✓
+
+
+- OAuth public / private endpoints
 - Message date
 - Emoji reactions
 - Reply to message

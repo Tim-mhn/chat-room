@@ -11,7 +11,17 @@ export class AuthComponent implements OnInit {
   constructor(private auth: AuthService, private http: HttpClient) {}
 
   isAuthenticated$ = this.auth.isAuthenticated$;
-  ngOnInit(): void {}
+
+  accessToken: string;
+  ngOnInit(): void {
+    this._storeAccessToken();
+  }
+
+  private _storeAccessToken() {
+    this.auth
+      .getAccessTokenSilently()
+      .subscribe((accessToken) => (this.accessToken = accessToken));
+  }
 
   login() {
     this.auth.loginWithPopup();
@@ -21,7 +31,16 @@ export class AuthComponent implements OnInit {
   }
 
   callAPI() {
+    this.auth.getIdTokenClaims;
     this.http.get('http://localhost:3000/api/private').subscribe(console.log);
+
+    /**
+       * {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      })
+       */
   }
 
   callPublicAPI() {

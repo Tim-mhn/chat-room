@@ -9,6 +9,7 @@ import { RoomSelectionComponent } from './room-selection/room-selection.componen
 import { AuthModule } from '@auth0/auth0-angular';
 import { AuthComponent } from './auth/auth.component';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthProvider } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
+
     AuthModule.forRoot({
       domain: 'dev-jajajfbc.us.auth0.com',
       clientId: 'Vsrw48jAFMbpXfIsLwAaHT8S6dlFVwOE',
@@ -31,7 +33,7 @@ import { HttpClientModule } from '@angular/common/http';
       errorPath: '/error',
     }),
   ],
-  providers: [],
+  providers: [AuthProvider],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

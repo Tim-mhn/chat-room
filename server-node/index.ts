@@ -2,9 +2,14 @@ import * as express from "express";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import { auth } from "express-oauth2-jwt-bearer";
-
+import * as cors from "cors";
 const app = express();
 const httpServer = createServer(app);
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 const io = new Server(httpServer, {
   cors: {
     origin: "*",
