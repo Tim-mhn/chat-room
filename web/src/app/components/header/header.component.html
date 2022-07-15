@@ -1,11 +1,17 @@
 <div
-  class="flex flex-grow w-full justify-end border-b border-gray-200 bg-gray-200 px-16 py-2"
+  class="flex flex-grow items-center w-full justify-end border-b border-gray-200 bg-gray-200 px-16 py-2"
 >
+  <div *ngIf="isLoggedIn$ | async" class="rounded">
+    <img
+      [src]="(profileService.profile$ | async)?.picture"
+      class="h-7 w-7 rounded border border-gray-200 shadow-sm"
+      height="28"
+      width="28"
+    />
+  </div>
   <ng-container
     *ngTemplateOutlet="(isLoggedIn$ | async) ? logoutButton : loginButton"
   ></ng-container>
-
-  {{ profileService.profile$ | async | json }}
 </div>
 
 <ng-template #loginButton>

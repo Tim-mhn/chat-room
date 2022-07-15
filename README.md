@@ -6,7 +6,16 @@
 - OAuth Login / sign up ✓
 
 
-- OAuth public / private endpoints
+- OAuth public / private endpoints ✓
+
+- WIP: Send access / idToken with WebSocket requests to identify the user and create more specific messages 
+  
+-> "User xx entered the room"
+-> "User xx sent a message" 
+...
+
+
+
 - Message date
 - Emoji reactions
 - Reply to message

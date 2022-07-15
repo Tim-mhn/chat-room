@@ -3,8 +3,7 @@ import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import { auth } from "express-oauth2-jwt-bearer";
 import * as cors from "cors";
-import jwt_decode from "jwt-decode";
-import { UserProfile } from "./models/profile";
+import { onConnection } from "./event-handlers/on-connection.handler";
 const app = express();
 const httpServer = createServer(app);
 app.use(
@@ -18,10 +17,6 @@ const io = new Server(httpServer, {
   },
 });
 
-function getUserProfileFromIdToken(idToken: string) {
-  return jwt_decode(idToken) as UserProfile;
-}
-
 // Authorization middleware. When used, the Access Token must
 // exist and be verified against the Auth0 JSON Web Key Set.
 const checkJwt = auth({
@@ -32,29 +27,7 @@ const checkJwt = auth({
 
 const chatNsp = io.of(/^\/chat-\d$/);
 
-chatNsp.on("connection", (socket: Socket) => {
-  const nsp = socket.nsp;
-
-  const roomNumber = nsp.name.slice(-1);
-  const roomName = `room-${roomNumber}`;
-  const socketId = socket.id;
-  socket.join(roomName);
-
-  chatNsp.to(roomName).emit("enter", { id: socketId, date: new Date() });
-  socket.on("message", (msg) => {
-    console.log("received message ", msg);
-    chatNsp
-      .to(roomName)
-      .emit("message", { id: socketId, message: msg, date: new Date() });
-  });
-
-  socket.on("disconnect", () => {
-    console.log(socketId, " disconnected");
-    chatNsp.to(roomName).emit("exit", { id: socketId, date: new Date() });
-  });
-});
-
-// setInterval(() => io.emit("msg", "hello"), 3000);
+chatNsp.on("connection", onConnection(chatNsp));
 
 httpServer.listen(3000, () => {
   console.log("Listening on http://localhost:3000 .....");

@@ -8,6 +8,7 @@ import {
   of,
   shareReplay,
   switchMap,
+  tap,
 } from 'rxjs';
 import { Profile } from '../models/profile';
 import { AuthenticationService } from './auth.service';
@@ -22,7 +23,7 @@ export class ProfileService {
     this.auth.idTokenClaims$.pipe(
       map((idTokenClaims) => {
         const { name, username, email, picture, id } = idTokenClaims;
-        console.log(idTokenClaims);
+
         return {
           name,
           email,
@@ -32,6 +33,13 @@ export class ProfileService {
         };
       }),
       catchError(() => of(null)),
+      tap(console.log),
+      tap((p) => (this._profile = p)),
       shareReplay(1)
     );
+
+  private _profile: Profile | null;
+  public get profile() {
+    return this._profile;
+  }
 }

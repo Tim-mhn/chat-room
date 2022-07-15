@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription, tap } from 'rxjs';
 import { AuthenticationService } from '../../auth/auth.service';
 import { ProfileService } from '../../auth/profile.service';
 
@@ -11,7 +12,7 @@ import { ProfileService } from '../../auth/profile.service';
     class: 'w-full',
   },
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private auth: AuthenticationService,
     private router: Router,
@@ -19,13 +20,25 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   isLoggedIn$ = this.auth.isLoggedIn$;
-  ngOnInit(): void {}
+
+  private navigateToRoomsOnLoginSub: Subscription;
+  ngOnInit(): void {
+    this.navigateToRoomsOnLoginSub = this.isLoggedIn$.subscribe(
+      (isLoggedIn) => {
+        if (isLoggedIn) this.router.navigate(['/rooms']);
+      }
+    );
+  }
 
   login() {
-    this.auth.login().subscribe(() => this.router.navigate(['/rooms']));
+    this.auth.login().subscribe();
   }
 
   logout() {
     this.auth.logout();
+  }
+
+  ngOnDestroy() {
+    this.navigateToRoomsOnLoginSub?.unsubscribe();
   }
 }

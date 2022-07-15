@@ -48,7 +48,7 @@
 
 <ng-template #enterLeaveEvent let-event>
   <div class="flex justify-center text-gray-300 text-3xs">
-    {{ event.data.id }}
+    {{ event.data.username }}
     {{ event.data?.enter ? "entered" : "exited" }} the room
   </div>
 </ng-template>
@@ -57,53 +57,31 @@
     <!-- message sender -->
     <div class="flex flex-flex-1 justify-end" style="flex-basis: 10%">
       <div
-        class="flex justify-center items-centerg cm -m rounded-full p-0.5 bg-blue-300 h-6 w-6 uppercase text-2xs"
-        *ngIf="
-          msgEvent.id !== socketId &&
-          (!roomEvents[i + 1] ||
-            roomEvents[i + 1]?.type !== 'message' ||
-            msgEvent.id !== roomEvents[i + 1]?.data?.id)
-        "
+        class="flex justify-center items-center rounded-full p-0.5 bg-blue-300 h-6 w-6 uppercase text-2xs"
+        *ngIf="showSenderIcon(msgEvent, i)"
       >
-        {{ msgEvent.id | slice: 0 - 2 }}
+        {{ msgEvent.username | slice: 0:2 }}
       </div>
     </div>
 
     <!-- message -->
     <div
       style="display: flex; flex: 8 8 80%"
-      [ngClass]="msgEvent.id === socketId ? 'justify-end' : 'justify-start'"
+      [ngClass]="
+        msgEvent.senderId === socketId ? 'justify-end' : 'justify-start'
+      "
     >
       <div
         class="font-normal text-sm py-1 px-2 rounded-md w-fit"
-        [ngClass]="msgEvent.id === socketId ? 'bg-green-500' : 'bg-gray-600'"
+        [ngClass]="
+          msgEvent.senderId === socketId ? 'bg-green-500' : 'bg-gray-600'
+        "
       >
-        {{ msgEvent.message }}
+        {{ msgEvent.messageData.message }}
       </div>
     </div>
 
     <!-- message reads -->
     <div class="flex flex-1" style="flex-basis: 10%"></div>
   </div>
-  <!-- <div
-    class="flex flex-col gap-0.5 text-white"
-    [ngClass]="msgEvent.id === socketId ? 'items-end' : 'items-start'"
-  >
-    <div
-      class="font-normal text-sm py-1 px-2 rounded-md w-fit"
-      [ngClass]="msgEvent.id === socketId ? 'bg-green-500' : 'bg-gray-600'"
-    >
-      {{ msgEvent.message }}
-    </div>
-    <div
-      *ngIf="
-        msgEvent.id !== socketId &&
-        (!roomEvents[i + 1] ||
-          roomEvents[i + 1]?.type !== 'message' ||
-          msgEvent.id !== roomEvents[i + 1]?.data?.id)
-      "
-    >
-      From: {{ msgEvent.id }}
-    </div>
-  </div> -->
 </ng-template>

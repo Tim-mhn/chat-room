@@ -22,9 +22,11 @@ export class LoggedInGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
+    console.log('logged in guard');
     const isLoggedIn$ = this._auth.isLoggedIn$;
     return isLoggedIn$.pipe(
       map((isLoggedIn) => {
+        console.log('is logged in ? ', isLoggedIn);
         return isLoggedIn || this.router.createUrlTree(['/login']);
       })
     );
