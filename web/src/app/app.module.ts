@@ -11,9 +11,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthProvider } from './interceptors/auth.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderModule } from './components/header/header.module';
+import { ShowSenderIconPipe } from './room/pipes/show-sender-icon.pipe';
+import { ShowNumberOfReadsPipe } from './room/pipes/show-number-of-reads.pipe';
 
 @NgModule({
-  declarations: [AppComponent, RoomComponent, RoomSelectionComponent],
+  declarations: [AppComponent, RoomComponent, RoomSelectionComponent, ShowSenderIconPipe, ShowNumberOfReadsPipe],
   imports: [
     BrowserModule,
     AppRoutingModule,

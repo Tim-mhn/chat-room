@@ -21,7 +21,7 @@ interface MessageReceivedEvent {
   username: string;
 }
 
-type Message = MessageReceivedEvent & {
+export type Message = MessageReceivedEvent & {
   readBy: string[];
 };
 
@@ -32,7 +32,7 @@ interface UserEnterLeaveEvent {
   username: string;
 }
 
-type IRoomEventInfo =
+export type IRoomEventInfo =
   | {
       type: 'message';
       data: Message;
@@ -64,14 +64,7 @@ export class RoomComponent implements OnInit {
 
   socketId: string;
 
-  showSenderIcon(msgEvent: any, i: number) {
-    return (
-      msgEvent.senderId !== this.socketId &&
-      (!this.roomEvents[i + 1] ||
-        this.roomEvents[i + 1]?.type !== 'message' ||
-        msgEvent.senderId !== (this.roomEvents[i + 1]?.data as any).senderId)
-    );
-  }
+  showSenderIcon(msgEvent: any, i: number) {}
 
   public roomEvents: IRoomEventInfo[] = [];
 
@@ -131,11 +124,22 @@ export class RoomComponent implements OnInit {
       this._emitMessageRead(event);
     });
 
-    this.socket.on('readMessage', this._addReaderToMessage);
+    this.socket.on('readMessage', this._addReaderToMessage.bind(this));
   }
 
   private _addReaderToMessage(ev: MessageReadFromServerEvent) {
-    console.log(ev);
+    const message = this._messageEvents?.find(
+      (event) => event?.messageData.id === ev.messageId
+    );
+    if (!message) return;
+
+    message.readBy.push(ev.readBy);
+  }
+
+  private get _messageEvents() {
+    return this.roomEvents
+      .filter((event) => event.type === 'message')
+      .map((e) => e.data) as Message[];
   }
 
   private _emitMessageRead(messageReceivedEvent: MessageReceivedEvent) {

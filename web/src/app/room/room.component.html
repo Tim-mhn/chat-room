@@ -58,7 +58,7 @@
     <div class="flex flex-flex-1 justify-end" style="flex-basis: 10%">
       <div
         class="flex justify-center items-center rounded-full p-0.5 bg-blue-300 h-6 w-6 uppercase text-2xs"
-        *ngIf="showSenderIcon(msgEvent, i)"
+        *ngIf="i | showSenderIcon: msgEvent:socketId:roomEvents"
       >
         {{ msgEvent.username | slice: 0:2 }}
       </div>
@@ -82,6 +82,12 @@
     </div>
 
     <!-- message reads -->
-    <div class="flex flex-1" style="flex-basis: 10%"></div>
+    <div
+      class="flex flex-1"
+      style="flex-basis: 10%"
+      *ngIf="i | showNumberOfReads: msgEvent:socketId:roomEvents"
+    >
+      <div class="">{{ msgEvent.readBy?.length }}</div>
+    </div>
   </div>
 </ng-template>

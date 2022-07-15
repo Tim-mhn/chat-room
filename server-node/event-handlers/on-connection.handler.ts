@@ -26,7 +26,7 @@ export function onConnection(chatNamespace: Namespace) {
     socket.on("readMessage", ({ messageId, senderId }) =>
       socket.broadcast
         .to(senderId)
-        .emit("readMessage", { messageId, readyBy: username })
+        .emit("readMessage", { messageId, readBy: username })
     );
   };
 }
