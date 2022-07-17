@@ -1,5 +1,7 @@
 # chat-room
 
+![Chat room screenshot](https://github.com/Tim-mhn/chat-room/blob/main/web/src/assets/chat-room-screenshot.png)
+
 ## To do 
 
 - "User x entered / exited the room" ✓
