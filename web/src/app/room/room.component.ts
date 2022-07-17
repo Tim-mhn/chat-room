@@ -9,6 +9,10 @@ import {
   MessageReadToServerEvent,
 } from '../events/message-read.event';
 import { SendMessageEvent } from '../events/send-message.event';
+import {
+  randomTaildwindColorClass,
+  TAILWIND_COLORS,
+} from '../utils/random-taildwind-color-class.util';
 
 interface MessageReceivedData {
   message: string;
@@ -62,7 +66,15 @@ export class RoomComponent implements OnInit {
 
   socket: Socket;
 
+  n = [100, 200, 300, 400, 500, 600, 700, 800];
+  colors = TAILWIND_COLORS;
+  bgClasses = this.colors.flatMap((c) =>
+    this.n.map((value) => `bg-${c}-${value}`)
+  );
+
   socketId: string;
+
+  usersSocketIdToColorMap = {};
 
   showSenderIcon(msgEvent: any, i: number) {}
 
@@ -77,6 +89,7 @@ export class RoomComponent implements OnInit {
       type: 'message',
       data: messageWithNoReads,
     });
+    this._setNewUserColor(e.senderId);
   }
 
   public addUserEnterLeaveEvent(e: UserEnterLeaveEvent) {
@@ -85,6 +98,14 @@ export class RoomComponent implements OnInit {
       type: 'enterleave',
       data: e,
     });
+    this._setNewUserColor(e.id);
+  }
+
+  private _setNewUserColor(userId: string) {
+    if (this.usersSocketIdToColorMap[userId]) return;
+
+    const randomColor = randomTaildwindColorClass();
+    this.usersSocketIdToColorMap[userId] = randomColor;
   }
   async ngOnInit() {
     this.route.params.subscribe(({ roomNumber }) => {

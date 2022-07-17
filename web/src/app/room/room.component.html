@@ -57,7 +57,8 @@
     <!-- message sender -->
     <div class="flex flex-flex-1 justify-end" style="flex-basis: 10%">
       <div
-        class="flex justify-center items-center rounded-full p-0.5 bg-blue-300 h-6 w-6 uppercase text-2xs"
+        class="flex justify-center items-center rounded-full p-0.5 h-6 w-6 uppercase text-2xs"
+        [ngClass]="'bg-' + usersSocketIdToColorMap[msgEvent?.senderId]"
         *ngIf="i | showSenderIcon: msgEvent:socketId:roomEvents"
       >
         {{ msgEvent.username | slice: 0:2 }}
@@ -68,13 +69,15 @@
     <div
       style="display: flex; flex: 8 8 80%"
       [ngClass]="
-        msgEvent.senderId === socketId ? 'justify-end' : 'justify-start'
+        msgEvent?.senderId === socketId ? 'justify-end' : 'justify-start'
       "
     >
       <div
         class="font-normal text-sm py-1 px-2 rounded-md w-fit"
         [ngClass]="
-          msgEvent.senderId === socketId ? 'bg-green-500' : 'bg-gray-600'
+          msgEvent?.senderId === socketId
+            ? 'bg-green-500'
+            : 'bg-' + usersSocketIdToColorMap[msgEvent?.senderId]
         "
       >
         {{ msgEvent.messageData.message }}
@@ -85,9 +88,14 @@
     <div
       class="flex flex-1"
       style="flex-basis: 10%"
-      *ngIf="i | showNumberOfReads: msgEvent:socketId:roomEvents"
+      [ngClass]="{
+        invisible: !(i | showNumberOfReads: msgEvent:socketId:roomEvents)
+      }"
     >
-      <div class="">{{ msgEvent.readBy?.length }}</div>
+      <img src="assets/check-circle-green.svg" class="h-4 w-4" />
+      <div class="text-xs text-gray-400">
+        Read by {{ msgEvent.readBy?.length }}
+      </div>
     </div>
   </div>
 </ng-template>

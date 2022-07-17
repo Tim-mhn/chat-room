@@ -15,7 +15,7 @@ export class ShowSenderIconPipe implements PipeTransform {
     const isLastEvent = !roomEvents[i + 1];
     const nextEventIsNotMessage = roomEvents[i + 1]?.type !== 'message';
     const nextEventIsNotMessageFromSameSender =
-      msgEvent.senderId !== (roomEvents[i + 1]?.data as Message).senderId;
+      msgEvent.senderId !== (roomEvents[i + 1]?.data as Message)?.senderId;
     return (
       messageIsNotFromUser &&
       (isLastEvent ||

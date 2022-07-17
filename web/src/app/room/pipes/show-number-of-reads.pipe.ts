@@ -12,14 +12,14 @@ export class ShowNumberOfReadsPipe implements PipeTransform {
     currentSocketId: string,
     roomEvents: IRoomEventInfo[]
   ): boolean {
-    const messageIsFromUser = msgEvent.senderId === currentSocketId;
+    const messageIsFromUser = msgEvent?.senderId === currentSocketId;
     const nextMessagesFromCurrentUser = roomEvents
       .slice(i + 1)
       .find(
-        (ev) => ev.type === 'message' && ev.data.senderId === currentSocketId
+        (ev) => ev.type === 'message' && ev.data?.senderId === currentSocketId
       );
 
-    const messageHasAtLeastOneRead = msgEvent.readBy?.length > 0;
+    const messageHasAtLeastOneRead = msgEvent?.readBy?.length > 0;
     return (
       messageIsFromUser &&
       !nextMessagesFromCurrentUser &&
